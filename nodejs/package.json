@@ -1,0 +1,24 @@
+{
+  "name": "rtc-app-nodejs",
+  "version": "1.0.0",
+  "description": "Nodejs AppServer for RTC.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/winlinvip/rtc-app-nodejs.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/winlinvip/rtc-app-nodejs/issues"
+  },
+  "homepage": "https://github.com/winlinvip/rtc-app-nodejs#readme",
+  "dependencies": {
+    "@alicloud/rtc-2018-01-11": "^1.0.0",
+    "uuid": "^3.3.2",
+    "sha256": "^0.2.0"
+  }
+}
