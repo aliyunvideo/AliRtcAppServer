@@ -1,0 +1,7 @@
+.idea
+.DS_Store
+csharp/.vs/
+csharp/aliyun-openapi-net-sdk/
+csharp/rtc-app-csharp/bin/
+csharp/rtc-app-csharp/obj/
+csharp/rtc-app-csharp/rtc-app-csharp.csproj.user
