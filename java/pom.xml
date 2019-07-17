@@ -10,11 +10,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-rtc</artifactId>
-            <version>0.8.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.sun.net.httpserver</groupId>
             <artifactId>http</artifactId>
             <version>20070405</version>
@@ -26,10 +21,9 @@
             <version>1.2</version>
         </dependency>
         <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-core</artifactId>
-            <optional>true</optional>
-            <version>3.7.1</version>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20170516</version>
         </dependency>
     </dependencies>
 

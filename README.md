@@ -9,6 +9,8 @@ Select example by your programing languages:
 * [Nodejs](nodejs#appserver)
 * [PHP](php#appserver)
 
+We release it at [RTC AppServer Demo](https://github.com/aliyunvideo/AliRtcAppServer).
+
 ## Workflow
 
 For RTC deverloper:

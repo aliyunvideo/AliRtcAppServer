@@ -11,42 +11,27 @@ Python AppServer for AliRTC.
 (rm -rf CherryPy-3.2.2 && unzip -q CherryPy-3.2.2.zip && cd CherryPy-3.2.2 && python setup.py install --user)
 ```
 
-2. Install AliRTC OpenAPI SDK by:
+2. Create APP and APPKey from [here](https://rtc.console.aliyun.com/#/manage):
 
 ```
-pip install aliyun-python-sdk-rtc --user
+AppID: xxxxxxxx
+AppKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-> Remark: There maybe some errors, please ignore them.
-
-3. Generate AK from [here](https://usercenter.console.aliyun.com/#/manage/ak):
+3. Start AppServer, **use your information**:
 
 ```
-AccessKeyID: xxxxxxxxxxxxxxxx
-AccessKeySecret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
-
-4. Create APP from [here](https://rtc.console.aliyun.com/#/manage):
-
-```
-AppID: iwo5l81k
-```
-
-5. Start AppServer, **use your information**:
-
-```
-./server.py --listen=8080 --access-key-id=xxxxxxxxxxxxxxxx \
-	--access-key-secret=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx --appid=iwo5l81k \
+./server.py --listen=8080 --appid=xxxxxxxx \
+	--appkey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \
 	--gslb=https://rgslb.rtc.aliyuncs.com
 ```
 
-6. Verify  your AppServer by [here](http://ossrs.net/talks/ng_index.html#/rtc-check?schema=http&host=127.0.0.1&port=8080&path=/app/v1/login&room=1237&user=jzufp&password=12345678) or [verify token](http://ossrs.net/talks/ng_index.html#/token-check).
+
+4. Verify your AppServer by [VerifyServer](../verify/README.md).
 
 ![AppServer Success](images/app-ok.png)
 
 ![AppServer Failed](images/app-failed.png)
-
-![AppServer Error Recovered](images/app-recovered.png)
 
 > Remark: You can setup client native SDK by `http://30.2.228.19:8080/app/v1`.
 
@@ -75,42 +60,26 @@ sudo python setup.py install)
 (rm -rf CherryPy-3.2.2 && unzip -q CherryPy-3.2.2.zip && cd CherryPy-3.2.2 && python setup.py install --user)
 ```
 
-3. Install AliRTC OpenAPI SDK by:
+3. Create APP and APPKey from [here](https://rtc.console.aliyun.com/#/manage):
 
 ```
-sudo pip install aliyun-python-sdk-rtc
+AppID: xxxxxxxx
+AppKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-> Remark: There maybe some errors, please ignore them.
-
-4. Generate AK from [here](https://usercenter.console.aliyun.com/#/manage/ak):
+4. Start AppServer, **use your information**:
 
 ```
-AccessKeyID: xxxxxxxxxxxxxxxx
-AccessKeySecret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
-
-5. Create APP from [here](https://rtc.console.aliyun.com/#/manage):
-
-```
-AppID: iwo5l81k
-```
-
-6. Start AppServer, **use your information**:
-
-```
-./server.py --listen=8080 --access-key-id=xxxxxxxxxxxxxxxx \
-	--access-key-secret=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx --appid=iwo5l81k \
+./server.py --listen=8080 --appid=xxxxxxxx \
+	--appkey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \
 	--gslb=https://rgslb.rtc.aliyuncs.com
 ```
 
-7. Verify  your AppServer by [here](http://ossrs.net/talks/ng_index.html#/rtc-check?schema=http&host=127.0.0.1&port=8080&path=/app/v1/login&room=1237&user=jzufp&password=12345678) or [verify token](http://ossrs.net/talks/ng_index.html#/token-check).
+5.Verify your AppServer by [VerifyServer](../verify/README.md).
 
 ![AppServer Success](images/app-ok.png)
 
 ![AppServer Failed](images/app-failed.png)
-
-![AppServer Error Recovered](images/app-recovered.png)
 
 > Remark: You can setup client native SDK by `http://30.2.228.19:8080/app/v1`.
 
@@ -132,54 +101,27 @@ cd pycryptodome-*
 python setup.py install --user
 ```
 
-3. Download Core SDK from [here](https://pypi.org/project/aliyun-python-sdk-core/#files), then unzip and install by:
+3. Create APP and APPKey from [here](https://rtc.console.aliyun.com/#/manage):
 
 ```
-cd aliyun-python-sdk-core-*
-python setup.py install --user
+AppID: xxxxxxxx
+AppKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-4. Download RTC SDK from [here](https://pypi.org/project/aliyun-python-sdk-rtc/#files), then unzip and install by:
+4. Start AppServer, **use your information**:
 
 ```
-cd aliyun-python-sdk-rtc-*
-python setup.py install --user
+python server.py --listen=8080 --appid=xxxxxxxx \
+    --appkey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \
+    --gslb=https://rgslb.rtc.aliyuncs.com
 ```
 
-
-5. Generate AK from [here](https://usercenter.console.aliyun.com/#/manage/ak):
-
-```
-AccessKeyID: xxxxxxxxxxxxxxxx
-AccessKeySecret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
-
-6. Create APP from [here](https://rtc.console.aliyun.com/#/manage):
-
-```
-AppID: iwo5l81k
-```
-
-7. Start AppServer, **use your information**:
-
-```
-python server.py --listen=8080 --access-key-id=xxxxxxxxxxxxxxxx \
-	--access-key-secret=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx --appid=iwo5l81k \
-	--gslb=https://rgslb.rtc.aliyuncs.com
-```
-
-8. Verify  your AppServer by [here](http://ossrs.net/talks/ng_index.html#/rtc-check?schema=http&host=127.0.0.1&port=8080&path=/app/v1/login&room=1237&user=jzufp&password=12345678) or [verify token](http://ossrs.net/talks/ng_index.html#/token-check).
+5. Verify your AppServer by [VerifyServer](../verify/README.md).
 
 ![AppServer Success](images/app-ok.png)
 
 ![AppServer Failed](images/app-failed.png)
 
-![AppServer Error Recovered](images/app-recovered.png)
-
 > Remark: You can setup client native SDK by `http://30.2.228.19:8080/app/v1`.
 
 > Remark: Please use your AppServer IP instead by `ipconfig`.
-
-## Links
-
-AliRTC python OpenAPI SDK is [here](https://develop.aliyun.com/tools/sdk#/python).

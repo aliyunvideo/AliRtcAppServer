@@ -4,36 +4,28 @@ Golang AppServer for RTC.
 
 ## Usage
 
-1. Generate AK from [here](https://usercenter.console.aliyun.com/#/manage/ak):
+1. Create APP and APPKey from [here](https://rtc.console.aliyun.com/#/manage):
 
 ```
-AccessKeyID: xxxxxxxxxxxxxxxx
-AccessKeySecret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+AppID: xxxxxxxx
+AppKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-2. Create APP from [here](https://rtc.console.aliyun.com/#/manage):
+2. Setup Golang environment, click [here](https://blog.csdn.net/win_lin/article/details/48265493).
+
+
+3. Run project with args(replace appid and appkey with yours):
 
 ```
-AppID: iwo5l81k
+go run main.go --listen=8080 --appid=xxxxxxxx \
+    --appkey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx --gslb=https://rgslb.rtc.aliyuncs.com
 ```
 
-3. Setup Golang enviroment, click [here](https://blog.csdn.net/win_lin/article/details/48265493).
-
-4. Start AppServer, **use your information**:
-
-```
-go run main.go --listen=8080 --access-key-id=xxxxxxxxxxxxxxxx \
-	--access-key-secret=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx --appid=iwo5l81k \
-	--gslb=https://rgslb.rtc.aliyuncs.com
-```
-
-5. Verify  your AppServer by [here](http://ossrs.net/talks/ng_index.html#/rtc-check?schema=http&host=127.0.0.1&port=8080&path=/app/v1/login&room=1237&user=jzufp&password=12345678) or [verify token](http://ossrs.net/talks/ng_index.html#/token-check).
+4. Verify your AppServer by [VerifyServer](../verify/README.md).
 
 ![AppServer Success](images/app-ok.png)
 
 ![AppServer Failed](images/app-failed.png)
-
-![AppServer Error Recovered](images/app-recovered.png)
 
 > Remark: You can setup client native SDK by `http://30.2.228.19:8080/app/v1`.
 

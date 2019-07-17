@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html ng-app="scApp">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>RTC</title>
+    <link rel="stylesheet" type="text/css" href="js/3rdparty/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="js/talks.css"/>
+    <style>
+        body {
+            padding-top: 50px;
+        }
+    </style>
+</head>
+<body ng-controller="CSCMain">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="javascript:void(0)">RTC</a>
+                <ul class="nav">
+                    <li class="{{'/rtc-check'| sc_filter_nav_active}}">
+                        <a href="javascript:void(0)" ng-click="go_rtc_check()">VerifyApp</a>
+                    </li>
+                    <li class="{{'/token-check'| sc_filter_nav_active}}">
+                        <a href="javascript:void(0)" ng-click="go_token_check()">VerifyToken</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div ng-view></div>
+        <div bravo-alert ng-repeat="log in logs" class="alert fade in {{log.level|sc_filter_log_level}}">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>{{log.level}}:</strong> {{log.msg}}
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="container">
+            <p>Talks &copy; Team 2018</p>
+        </div>
+    </footer>
+    <script type="text/javascript" src="js/3rdparty/angular.js"></script>
+    <script type="text/javascript" src="js/3rdparty/angular-route.js"></script>
+    <script type="text/javascript" src="js/3rdparty/angular-resource.js"></script>
+    <script type="text/javascript" src="js/winlin.utility.js"></script>
+    <script type="text/javascript" src="js/bravo_alert/alert.js"></script>
+    <script type="text/javascript" src="js/bravo_popover/popover.js"></script>
+    <script type="text/javascript" src="js/talks.js"></script>
+    <script type="text/javascript" src="js/rtc-check.js"></script>
+    <script type="text/javascript" src="js/sjcl.js"></script>
+</body>
+</html>

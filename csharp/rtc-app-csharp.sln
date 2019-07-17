@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rtc-app-csharp", "rtc-app-csharp\rtc-app-csharp.csproj", "{853CA45E-8388-4CB6-BB50-8C73D4819464}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aliyun-net-sdk-core.vs2017", "aliyun-openapi-net-sdk\aliyun-net-sdk-core\aliyun-net-sdk-core.vs2017.csproj", "{D7B88D0F-D977-49A9-B7B6-16716B499ADC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aliyun-net-sdk-rtc.vs2017", "aliyun-openapi-net-sdk\aliyun-net-sdk-rtc\aliyun-net-sdk-rtc.vs2017.csproj", "{61120BDB-E5D3-45AE-A7CF-36C36D38EC29}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,13 +13,5 @@ Global
 		{853CA45E-8388-4CB6-BB50-8C73D4819464}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{853CA45E-8388-4CB6-BB50-8C73D4819464}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{853CA45E-8388-4CB6-BB50-8C73D4819464}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D7B88D0F-D977-49A9-B7B6-16716B499ADC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7B88D0F-D977-49A9-B7B6-16716B499ADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7B88D0F-D977-49A9-B7B6-16716B499ADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7B88D0F-D977-49A9-B7B6-16716B499ADC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{61120BDB-E5D3-45AE-A7CF-36C36D38EC29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{61120BDB-E5D3-45AE-A7CF-36C36D38EC29}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{61120BDB-E5D3-45AE-A7CF-36C36D38EC29}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{61120BDB-E5D3-45AE-A7CF-36C36D38EC29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

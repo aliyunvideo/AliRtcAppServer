@@ -2,134 +2,35 @@
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Threading;
-using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-
-using Aliyun.Acs.Core;
-using Aliyun.Acs.Core.Profile;
-using Aliyun.Acs.rtc.Model.V20180111;
-using Aliyun.Acs.Core.Exceptions;
-
 using System.Security.Cryptography;
 
 namespace rtc_app_csharp
 {
-    class ChannelAuth
-    {
-        public string AppId;
-        public string ChannelId;
-        public string Nonce;
-        public Int64 Timestamp;
-        public string ChannelKey;
-        public bool Recovered;
-        public string RequestId;
-    }
-
     class Program
     {
-        static ChannelAuth RecoverForError(Exception ex, string appId, string channelId)
+        static string CreateUserId(string channelId, string user)
         {
-            bool fatal = false;
-            string requestId = "";
+            StringBuilder sb = new StringBuilder();
+            sb.Append(channelId).Append("/").Append(user);
 
-            ClientException cex = ex as ClientException;
-            if (cex != null && cex.ErrorCode != null)
+            using (SHA256 hash = SHA256.Create())
             {
-                requestId = cex.RequestId;
-                string code = cex.ErrorCode;
-                if (code == "IllegalOperationApp")
-                {
-                    fatal = true;
-                }
-                else if (code.StartsWith("InvalidAccessKeyId", StringComparison.Ordinal))
-                {
-                    fatal = true;
-                }
-                else if (code == "SignatureDoesNotMatch")
-                {
-                    fatal = true;
-                }
+                byte[] checksum = hash.ComputeHash(
+                    Encoding.ASCII.GetBytes(sb.ToString()));
+
+                string uid = HexEncode(checksum);
+                return uid.Substring(0, 16);
             }
-
-            if (fatal)
-            {
-                throw ex;
-            }
-
-            string recovered = "RCV-" + Guid.NewGuid().ToString();
-            System.Console.WriteLine("Recover from {0}, recovered={1}", ex.ToString(), recovered);
-
-            ChannelAuth auth = new ChannelAuth();
-            auth.AppId = appId;
-            auth.ChannelId = channelId;
-            auth.Nonce = recovered;
-            auth.Timestamp = 0;
-            auth.ChannelKey = recovered;
-            auth.Recovered = true;
-
-            return auth;
-        }
-
-        static ChannelAuth CreateChannel(
-            string appId, string channelId,
-            string regionId, string endpoint, string accessKeyId,
-            string accessKeySecret)
-        {
-            try
-            {
-                IClientProfile profile = DefaultProfile.GetProfile(
-                    regionId, accessKeyId, accessKeySecret);
-                IAcsClient client = new DefaultAcsClient(profile);
-
-                CreateChannelRequest request = new CreateChannelRequest();
-                request.AppId = appId;
-                request.ChannelId = channelId;
-
-                // Strongly recomment to set the RTC endpoint,
-                // because the exception is not the "right" one if not set.
-                // For example, if access-key-id is invalid:
-                //      1. if endpoint is set, exception is InvalidAccessKeyId.NotFound
-                //      2. if endpoint isn't set, exception is SDK.InvalidRegionId
-                // that's caused by query endpoint failed.
-                // @remark SDk will cache endpoints, however it will query endpoint for the first
-                //      time, so it's good for performance to set the endpoint.
-                DefaultProfile.AddEndpoint(regionId, regionId, request.Product, endpoint);
-
-                // Use HTTP, x3 times faster than HTTPS.
-                request.Protocol = Aliyun.Acs.Core.Http.ProtocolType.HTTP;
-
-                CreateChannelResponse response = client.GetAcsResponse(request);
-
-                ChannelAuth auth = new ChannelAuth();
-                auth.AppId = appId;
-                auth.ChannelId = channelId;
-                auth.Nonce = response.Nonce;
-                auth.Timestamp = (Int64)response.Timestamp;
-                auth.ChannelKey = response.ChannelKey;
-                auth.Recovered = false;
-                auth.RequestId = response.RequestId;
-
-                return auth;
-            }
-            catch (Exception ex)
-            {
-                return RecoverForError(ex, appId, channelId);
-            }
-        }
-
-        static string CreateUserId()
-        {
-            return Guid.NewGuid().ToString();
         }
 
         static string CreateToken(
-            string channelId, string channelKey, string appid, string userId,
+            string appid, string appKey, string channelId, string userId,
             string nonce, Int64 timestamp)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(channelId).Append(channelKey);
-            sb.Append(appid).Append(userId);
+            sb.Append(appid).Append(appKey);
+            sb.Append(channelId).Append(userId);
             sb.Append(nonce).Append(timestamp);
 
             using (SHA256 hash = SHA256.Create())
@@ -153,13 +54,9 @@ namespace rtc_app_csharp
             return sb.ToString();
         }
 
-        static Dictionary<string, ChannelAuth> channels = new Dictionary<string, ChannelAuth>();
-
         static void Main(string[] args)
         {
-            string appid = "", listen = "", accessKeyId = "", accessKeySecret = "", gslb = "";
-            string regionId = "cn-hangzhou";
-            string endpoint = "rtc.aliyuncs.com";
+            string appid = "", appkey = "", listen = "", gslb = "";
 
             foreach (string arg in args)
             {
@@ -168,38 +65,33 @@ namespace rtc_app_csharp
                 {
                     appid = value;
                 }
+                else if (key == "--appkey")
+                {
+                    appkey = value;
+                }
                 else if (key == "--listen")
                 {
                     listen = value;
-                }
-                else if (key == "--access-key-id")
-                {
-                    accessKeyId = value;
-                }
-                else if (key == "--access-key-secret")
-                {
-                    accessKeySecret = value;
                 }
                 else if (key == "--gslb")
                 {
                     gslb = value;
                 }
             }
-            if (appid == "" || listen == "" || accessKeyId == "" || accessKeySecret == "" || gslb == "")
+            if (appid == "" || appkey == "" || listen == "" || gslb == "")
             {
                 System.Console.WriteLine("Usage: app.exe <options>");
-                System.Console.WriteLine("    --appid             the id of app");
-                System.Console.WriteLine("    --listen            listen port");
-                System.Console.WriteLine("    --access-key-id     the id of access key");
-                System.Console.WriteLine("    --access-key-secret the secret of access key");
-                System.Console.WriteLine("    --gslb              the gslb url");
+                System.Console.WriteLine("    --appid    the id of app");
+                System.Console.WriteLine("    --appkey   the key of app");
+                System.Console.WriteLine("    --listen   listen port");
+                System.Console.WriteLine("    --gslb     the gslb url");
                 System.Console.WriteLine("Example:");
-                System.Console.WriteLine("    app.exe --listen=8080 --access-key-id=OGAEkdiL62AkwSgs --access-key-secret=4JaIs4SG4dLwPsQSwGAHzeOQKxO6iw --appid=iwo5l81k --gslb=https://rgslb.rtc.aliyuncs.com");
+                System.Console.WriteLine("    app.exe --listen=8080 --appid=iwo5l81k --appkey=9af82119dea1a774334bd89c9bd93631 --gslb=https://rgslb.rtc.aliyuncs.com");
                 Environment.Exit(-1);
             }
             System.Console.WriteLine(String.Format(
-                "Server listen={0}, appid={1}, akID={2}, akSecret={3}, gslb={4}, regionId={5}, endpoint={6}",
-                listen, appid, accessKeyId, accessKeySecret, gslb, regionId, endpoint));
+                "Server listen={0}, appid={1}, appkey={2}, gslb={3}",
+                listen, appid, appkey, gslb));
 
             using (HttpListener listener = new HttpListener())
             {
@@ -209,12 +101,12 @@ namespace rtc_app_csharp
                 while (true)
                 {
                     HttpListenerContext context = listener.GetContext();
-                    HandleRequest(context, appid, accessKeyId, accessKeySecret, gslb, regionId, endpoint);
+                    HandleRequest(context, appid, appkey, gslb);
                 }
             }
         }
 
-        static void HandleRequest(HttpListenerContext context, string appid, string accessKeyId, string accessKeySecret, string gslb, string regionId, string endpoint)
+        static void HandleRequest(HttpListenerContext context, string appid, string appkey, string gslb)
         {
             if (context.Request.Headers.Get("Origin") != "")
             {
@@ -240,47 +132,37 @@ namespace rtc_app_csharp
 
             string channelId = context.Request.QueryString.Get("room");
             string user = context.Request.QueryString.Get("user");
-            string channelUrl = string.Format("{0}/{1}", appid, channelId);
             System.Console.WriteLine(String.Format("Request channelId={0}, user={1}, appid={2}", channelId, user, appid));
+
+            if (channelId == "" || user == "")
+            {
+                responseWrite(context, HttpStatusCode.NotFound, String.Format("Invalid parameter"));
+                return;
+            }
 
             try
             {
-                DateTime starttime = DateTime.Now;
+                string userId = CreateUserId(channelId, user);
 
-                ChannelAuth auth = null;
-                using (Mutex locker = new Mutex())
-                {
-                    locker.WaitOne();
+                // Warning: nonce support the AppKey generated token.
+                // the Nonce should be prefix with 'AK-' otherwise the joining verification will failed.
+                // eg. nonce: "AK-0464002093ce3dd010cb05356c8b1d0f".
+                string nonce = "AK-" + Guid.NewGuid().ToString();
 
-                    if (channels.ContainsKey(channelUrl))
-                    {
-                        auth = channels[channelUrl];
-                    }
-                    else
-                    {
-                        auth = CreateChannel(appid, channelId, regionId, endpoint, accessKeyId, accessKeySecret);
+                // Warning: timestamp is the token expiration time.
+                // User can custom defined the expire time of token.
+                // eg, Expires in two days. timestamp: 1559890860.
+                DateTime dateStart = new DateTime(1970, 1, 1, 8, 0, 0);
+                Int64 timestamp = Convert.ToInt64((DateTime.Now.AddHours(48) - dateStart).TotalSeconds);
 
-                        // If recovered from error, we should never cache it,
-                        // and we should try to request again next time.
-                        if (!auth.Recovered)
-                        {
-                            channels[channelUrl] = auth;
-                        }
-
-                        System.Console.WriteLine(String.Format(
-                            "CreateChannel requestId={4}, cost={6}ms, channelId={0}, nonce={1}, timestamp={2}, channelKey={3}, recovered={5}",
-                            channelId, auth.Nonce, auth.Timestamp, auth.ChannelKey, auth.RequestId, auth.Recovered, DateTime.Now.Subtract(starttime).Milliseconds));
-                    }
-                }
-
-                string userId = CreateUserId();
-                string token = CreateToken(channelId, auth.ChannelKey, appid, userId,
-                    auth.Nonce, auth.Timestamp);
+                string token = CreateToken(appid, appkey, channelId, userId, nonce, timestamp);
                 string username = String.Format(
                     "{0}?appid={1}&channel={2}&nonce={3}&timestamp={4}",
-                    userId, appid, channelId, auth.Nonce, auth.Timestamp);
-                System.Console.WriteLine("Sign cost={4}ms, user={0}, userId={1}, token={2}, channelKey={3}",
-                    user, userId, token, auth.ChannelKey, DateTime.Now.Subtract(starttime).Milliseconds);
+                    userId, appid, channelId, nonce, timestamp);
+
+                System.Console.WriteLine("Login: appID={0}, appKey={1}, channelID={2}, userID={3}, " +
+                    "nonce={4}, timestamp={5}, user={6}, userName={7}, token={8}",
+                    appid, appkey, channelId, userId, nonce, timestamp, user, username, token);
 
                 JObject rturn = new JObject();
                 rturn.Add("username", username);
@@ -294,8 +176,8 @@ namespace rtc_app_csharp
                 rresponse.Add("userid", userId);
                 rresponse.Add("gslb", rgslbs);
                 rresponse.Add("token", token);
-                rresponse.Add("nonce", auth.Nonce);
-                rresponse.Add("timestamp", auth.Timestamp);
+                rresponse.Add("nonce", nonce);
+                rresponse.Add("timestamp", timestamp);
                 rresponse.Add("turn", rturn);
 
                 JObject ro = new JObject();
