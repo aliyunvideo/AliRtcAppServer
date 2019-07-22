@@ -121,7 +121,12 @@ func main() {
 		// the Nonce should be prefix with 'AK-' otherwise the joining verification will failed.
 		// eg. nonce: "AK-0464002093ce3dd010cb05356c8b1d0f".
 
-		nonce := fmt.Sprintf("AK-%v", uuid.NewV4())
+		uuid, err := uuid.NewV4()
+		if err != nil {
+			oh.WriteError(nil, w, r, err)
+			return
+		}
+		nonce := fmt.Sprintf("AK-%v", uuid)
 
 		// Warning: timestamp is the token expiration time.
 		// User can custom defined the expire time of token.

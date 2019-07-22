@@ -69,7 +69,7 @@ class RESTLogin(object):
         # User can custom defined the expire time of token.
         # eg, Expires in two days. timestamp: 1559890860.
         expire = datetime.datetime.now()+datetime.timedelta(days=2)
-        timestamp = time.mktime(expire.timetuple())
+        timestamp = int(time.mktime(expire.timetuple()))
 
         # generate token
         token = create_token(app_id, app_key, channel_id, user_id, nonce, timestamp)
